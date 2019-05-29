@@ -17,43 +17,37 @@ public class ComplexNumExponential extends AbstractNumber {
     public double getPhase() { return phase; }
 
     public ComplexNumExponential(String value) throws MyException{
-        try{
-            StringTokenizer st = new StringTokenizer (value, "+-e^i", true);
+        StringTokenizer st = new StringTokenizer (value, "+-e^i", true);
+        if (st.hasMoreTokens()) {
+            String sa = st.nextToken().trim();
             if (st.hasMoreTokens()) {
-                String sa = st.nextToken().trim();
+                if (sa.equals ("+")) sa = st.nextToken().trim();
+                if (sa.equals ("-")) sa = "-" + st.nextToken().trim();
+                if (sa.equals ("i")) throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+            }
+            module = Double.parseDouble (sa.replace(',','.'));
+            if (st.hasMoreTokens()) {
+                String sb = st.nextToken().trim();
+                if (sb.equals("e")) sb = st.nextToken().trim();
+                else throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+                if (sb.equals("^")) sb = st.nextToken().trim();
+                else throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
                 if (st.hasMoreTokens()) {
-                    if (sa.equals ("+")) sa = st.nextToken().trim();
-                    if (sa.equals ("-")) sa = "-" + st.nextToken().trim();
-                    if (sa.equals ("i")) throw new IllegalArgumentException (value + " is not a complex number");
+                    if (sb.equals ("+")) sb = st.nextToken().trim();
+                    if (sb.equals ("-")) sb = "-" + st.nextToken().trim();
                 }
-                module = Double.parseDouble (sa.replace(',','.'));
-                if (st.hasMoreTokens()) {
-                    String sb = st.nextToken().trim();
-                    if (sb.equals("e")) sb = st.nextToken().trim();
-                    else throw new IllegalArgumentException (value + " is not a complex number");
-                    if (sb.equals("^")) sb = st.nextToken().trim();
-                    else throw new IllegalArgumentException (value + " is not a complex number");
-                    if (st.hasMoreTokens()) {
-                        if (sb.equals ("+")) sb = st.nextToken().trim();
-                        if (sb.equals ("-")) sb = "-" + st.nextToken().trim();
-                    }
-                    phase = Double.parseDouble (sb.replace(',','.'));
-                }
-                if (st.hasMoreTokens()) {
-                    String si = st.nextToken().trim();
-                    if (!si.equals ("i"))
-                        throw new IllegalArgumentException
-                                (value + " is not a complex number");
-                    if (st.hasMoreTokens())
-                        throw new IllegalArgumentException
-                                (value + " is not a complex number");
-                } else
-                    throw new IllegalArgumentException
-                            (value + " is not a complex number");
+                phase = Double.parseDouble (sb.replace(',','.'));
+            }
+            if (st.hasMoreTokens()) {
+                String si = st.nextToken().trim();
+                if (!si.equals ("i"))
+                    throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+                if (st.hasMoreTokens())
+                    throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
             } else
-                throw new IllegalArgumentException (value + " is not a complex number");
-        }catch (IllegalArgumentException e) {throw new MyException(e.getMessage(),ErrorCode.NotComplexNumber);}
-
+                throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+        } else
+            throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
     }
 
     public String toCartesianForm() {

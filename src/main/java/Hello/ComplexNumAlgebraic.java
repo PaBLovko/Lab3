@@ -16,38 +16,33 @@ public class ComplexNumAlgebraic extends AbstractNumber {
     }
 
     public ComplexNumAlgebraic(String value) throws MyException{
-        try {
-            StringTokenizer st = new StringTokenizer (value, "+-i", true);
+        StringTokenizer st = new StringTokenizer (value, "+-i", true);
+        if (st.hasMoreTokens()) {
+            String sa = st.nextToken().trim();
             if (st.hasMoreTokens()) {
-                String sa = st.nextToken().trim();
+                if (sa.equals ("+")) sa = st.nextToken().trim();
+                if (sa.equals ("-")) sa = "-" + st.nextToken().trim();
+                if (sa.equals ("i")) throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+            }
+            re = Double.parseDouble (sa.replace(',','.'));
+            if (st.hasMoreTokens()) {
+                String sb = st.nextToken().trim();
                 if (st.hasMoreTokens()) {
-                    if (sa.equals ("+")) sa = st.nextToken().trim();
-                    if (sa.equals ("-")) sa = "-" + st.nextToken().trim();
-                    if (sa.equals ("i")) throw new IllegalArgumentException (value + " is not a complex number");
+                    if (sb.equals ("+")) sb = st.nextToken().trim();
+                    if (sb.equals ("-")) sb = "-" + st.nextToken().trim();
                 }
-                re = Double.parseDouble (sa.replace(',','.'));
-                if (st.hasMoreTokens()) {
-                    String sb = st.nextToken().trim();
-                    if (st.hasMoreTokens()) {
-                        if (sb.equals ("+")) sb = st.nextToken().trim();
-                        if (sb.equals ("-")) sb = "-" + st.nextToken().trim();
-                    }
-                    im = Double.parseDouble (sb.replace(',','.'));
-                }
-                if (st.hasMoreTokens()) {
-                    String si = st.nextToken().trim();
-                    if (!si.equals ("i"))
-                        throw new IllegalArgumentException
-                                (value + " is not a complex number");
-                    if (st.hasMoreTokens())
-                        throw new IllegalArgumentException
-                                (value + " is not a complex number");
-                } else
-                    throw new IllegalArgumentException
-                            (value + " is not a complex number");
+                im = Double.parseDouble (sb.replace(',','.'));
+            }
+            if (st.hasMoreTokens()) {
+                String si = st.nextToken().trim();
+                if (!si.equals ("i"))
+                    throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+                if (st.hasMoreTokens())
+                    throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
             } else
-                throw new IllegalArgumentException (value + " is not a complex number");
-        }catch (IllegalArgumentException e) {throw new MyException(e.getMessage(),ErrorCode.NotComplexNumber);}
+                throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
+        } else
+            throw new MyException((value + " is not a complex number"),ErrorCode.NotComplexNumber);
     }
 
     public double getRe() { return re; }
@@ -70,10 +65,8 @@ public class ComplexNumAlgebraic extends AbstractNumber {
     }
 
     public double getArgument() throws MyException{
-        try {
-            if(im == 0 && re == 0) throw new IllegalArgumentException ("Forbidden combination");
-            return Math.atan(im / re);
-        }catch (IllegalArgumentException e) {throw new MyException(e.getMessage(), ErrorCode.NotComplexNumber);}
+        if(im == 0 && re == 0) throw new MyException("Forbidden combination", ErrorCode.NotComplexNumber);
+        return Math.atan(im / re);
     }
 
     public double getModule() {

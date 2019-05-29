@@ -2,17 +2,14 @@ package Hello;
 
 import org.junit.Test;
 
-import java.util.logging.Logger;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class CheckTest {
 
-    private static Logger log = Logger.getLogger(CheckTest.class.getName());
     @Test(expected = MyException.class)
     public void containsComplex() throws MyException{
-        Check.containsComplex("1.1+32.3");
+        Check.containsComplex("Error");
     }
 
     @Test
